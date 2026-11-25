@@ -69,6 +69,7 @@ Converts a non-negative integer string or `BigInt` atomic-unit value into a trim
 
 ## Network references
 
+- [Base network information](https://docs.base.org/base-chain/network-information)
 - [Base documentation](https://docs.base.org/)
 - [Base Mainnet explorer](https://basescan.org/)
 - [Base Sepolia explorer](https://sepolia.basescan.org/)
