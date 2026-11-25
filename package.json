@@ -1,0 +1,13 @@
+{
+  "name": "base-ai-agents",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Small, dependency-free utilities for building AI agents on Base.",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
