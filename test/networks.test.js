@@ -30,7 +30,11 @@ test("builds correct Basescan transaction and address URLs", () => {
   assert.equal(getExplorerUrl("sepolia", address, "address"), `https://sepolia.basescan.org/address/${address}`);
 });
 
-test("rejects invalid explorer values and types", () => {
-  assert.throws(() => getExplorerUrl("base", "not-a-hash"), /valid EVM/);
-  assert.throws(() => getExplorerUrl("base", "0x" + "a".repeat(64), "block"), /Explorer type/);
+test("rejects invalid explorer values, lengths, and types", () => {
+  const hash = "0x" + "a".repeat(64);
+  const address = "0x" + "b".repeat(40);
+  assert.throws(() => getExplorerUrl("base", "not-a-hash"), /transaction hash/);
+  assert.throws(() => getExplorerUrl("base", address), /transaction hash/);
+  assert.throws(() => getExplorerUrl("base", hash, "address"), /address/);
+  assert.throws(() => getExplorerUrl("base", hash, "block"), /Explorer type/);
 });
