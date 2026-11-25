@@ -41,13 +41,17 @@ export function getBaseNetwork(input) {
   return Object.freeze({ ...NETWORKS[canonical] });
 }
 
-/** Build a Basescan URL for a transaction or address. */
+/** Build a Basescan URL for a transaction hash or EVM address. */
 export function getExplorerUrl(network, value, type = "tx") {
   if (type !== "tx" && type !== "address") {
     throw new Error('Explorer type must be "tx" or "address"');
   }
-  if (typeof value !== "string" || !/^0x[a-fA-F0-9]{40}$|^0x[a-fA-F0-9]{64}$/.test(value)) {
-    throw new Error("Expected a valid EVM address or transaction hash");
+  const expectedLength = type === "tx" ? 64 : 40;
+  if (
+    typeof value !== "string" ||
+    !new RegExp(`^0x[a-fA-F0-9]{${expectedLength}}$`).test(value)
+  ) {
+    throw new Error(`Expected a valid EVM ${type === "tx" ? "transaction hash" : "address"}`);
   }
   const base = getBaseNetwork(network).explorerUrl;
   return `${base}/${type}/${value}`;
