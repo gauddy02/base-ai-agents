@@ -5,6 +5,7 @@ const NETWORKS = {
     chainId: 8453,
     caip2: "eip155:8453",
     rpcEnv: "BASE_MAINNET_RPC_URL",
+    defaultRpcUrl: "https://mainnet.base.org",
     explorerUrl: "https://basescan.org",
     usdc: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
   },
@@ -14,6 +15,7 @@ const NETWORKS = {
     chainId: 84532,
     caip2: "eip155:84532",
     rpcEnv: "BASE_SEPOLIA_RPC_URL",
+    defaultRpcUrl: "https://sepolia.base.org",
     explorerUrl: "https://sepolia.basescan.org",
     usdc: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
   },
@@ -39,6 +41,36 @@ export function getBaseNetwork(input) {
     throw new Error(`Unsupported Base network: ${String(input)}`);
   }
   return Object.freeze({ ...NETWORKS[canonical] });
+}
+
+/**
+ * Resolve an RPC endpoint for a Base network.
+ * Pass an environment-like object to override the public default endpoint.
+ */
+export function getBaseRpcUrl(network, env = {}) {
+  const metadata = getBaseNetwork(network);
+  const configured = env?.[metadata.rpcEnv];
+  const rpcUrl = typeof configured === "string" && configured.trim()
+    ? configured.trim()
+    : metadata.defaultRpcUrl;
+
+  let parsed;
+  try {
+    parsed = new URL(rpcUrl);
+  } catch {
+    throw new Error("Base RPC URL must be a valid absolute URL");
+  }
+
+  if (
+    (parsed.protocol !== "https:" && parsed.protocol !== "http:") ||
+    !parsed.hostname ||
+    parsed.username ||
+    parsed.password
+  ) {
+    throw new Error("Base RPC URL must use HTTP(S) and must not contain credentials");
+  }
+
+  return rpcUrl;
 }
 
 /** Build a Basescan URL for a transaction hash or EVM address. */
